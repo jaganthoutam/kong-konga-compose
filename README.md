@@ -2,6 +2,11 @@
 
   * Preparation
   ```bash
+   systemctl stop firewalld
+   systemctl disable firewalld
+   systemctl status firewalld
+   sed -i s/^SELINUX=.*$/SELINUX=permissive/ /etc/selinux/config
+   setenforce 0
    yum update -y
    yum install -y https://download.docker.com/linux/centos/7/x86_64/stable/Packages/containerd.io-1.2.6-3.3.el7.x86_64.rpm
    sudo curl  https://download.docker.com/linux/centos/docker-ce.repo -o /etc/yum.repos.d/docker-ce.repo
@@ -13,7 +18,6 @@
    sudo chmod +x /usr/local/bin/docker-compose && ln -sv /usr/local/bin/docker-compose /usr/bin/docker-compose
    sudo docker-compose --version
    sudo docker --version
-  
   ```
 
 Run [Kong API Gateway, Community Edition](https://konghq.com/kong-community-edition)
