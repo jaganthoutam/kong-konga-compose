@@ -1,5 +1,20 @@
 # kongpose
 
+  * Preparation
+  ```bash
+   yum install -y https://download.docker.com/linux/centos/7/x86_64/stable/Packages/containerd.io-1.2.6-3.3.el7.x86_64.rpm
+   sudo curl  https://download.docker.com/linux/centos/docker-ce.repo -o /etc/yum.repos.d/docker-ce.repo
+   sudo yum makecache
+   sudo dnf -y install docker-ce
+   sudo dnf -y install  git
+   sudo systemctl enable --now docker
+   sudo curl -L https://github.com/docker/compose/releases/download/1.25.0/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
+   sudo chmod +x /usr/local/bin/docker-compose && ln -sv /usr/local/bin/docker-compose /usr/bin/docker-compose
+   sudo docker-compose --version
+   sudo docker --version
+  
+  ```
+
 Run [Kong API Gateway, Community Edition](https://konghq.com/kong-community-edition)
 development setup with [docker-compose](https://docs.docker.com/compose).
 Includes [Konga](https://github.com/pantsel/konga) as admin webapp.
