@@ -19,11 +19,7 @@
    sudo docker-compose --version
    sudo docker --version
   ```
-# Swarm setup
 
-  ```bash
-docker stack deploy --compose-file=docker-compose.yml kong
-  ```
 Run [Kong API Gateway, Community Edition](https://konghq.com/kong-community-edition)
 development setup with [docker-compose](https://docs.docker.com/compose).
 Includes [Konga](https://github.com/pantsel/konga) as admin webapp.
@@ -47,9 +43,15 @@ Originally based on [Yuan Cheung's docker-compose-kong](https://github.com/zhang
 
 ## Usage
 
+ ```bash
     docker-compose up
+  ```
+  
+## Swarm setup
 
-See [examples of managing APIs with YAML](https://github.com/asyrjasalo/kongpose/tree/master/examples).
+ ```bash
+docker stack deploy --compose-file=docker-compose-swarm.yaml kong
+  ```
 
 
 ## Endpoints
