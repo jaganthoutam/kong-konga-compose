@@ -19,7 +19,11 @@
    sudo docker-compose --version
    sudo docker --version
   ```
+# Swarm setup
 
+  ```bash
+docker stack deploy --compose-file=docker-compose.yml kong
+  ```
 Run [Kong API Gateway, Community Edition](https://konghq.com/kong-community-edition)
 development setup with [docker-compose](https://docs.docker.com/compose).
 Includes [Konga](https://github.com/pantsel/konga) as admin webapp.
