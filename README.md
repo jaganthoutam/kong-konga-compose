@@ -44,13 +44,47 @@ Originally based on [Yuan Cheung's docker-compose-kong](https://github.com/zhang
 ## Usage
 
  ```bash
+    git clone https://github.com/jaganthoutam/kong-konga-compose.git
+    cd kong-konga-compose
     docker-compose up
   ```
   
 ## Swarm setup
 
- ```bash
-docker stack deploy --compose-file=docker-compose-swarm.yaml kong
+
+  ```bash
+    #In First Node:
+    # Apply all Preparation Commands 
+    git clone https://github.com/jaganthoutam/kong-konga-compose.git
+    cd kong-konga-compose
+    docker swarm init --advertise-addr MASTERNODEIP
+    OUTPUT:
+    docker swarm join --token SWMTKN-1-1t1u0xijip6l33wdtt7jpq51blwx0hx3t54088xa4bxjy3yx42-90lf5b4nyyw4stbvcqyrde9sf MASTERNODEIP:2377
+    
+    
+    in 2nd Node:
+    # Apply all Preparation Commands 
+    # The command you find in MASTER NODE.
+    docker swarm join --token SWMTKN-1-1t1u0xijip6l33wdtt7jpq51blwx0hx3t54088xa4bxjy3yx42-90lf5b4nyyw4stbvcqyrde9sf MASTERNODEIP:2377
+    
+    #In First Node:
+    [root@master01 vagrant]#docker node ls
+ID                            HOSTNAME            STATUS              AVAILABILITY        MANAGER STATUS      ENGINE VERSION
+m55wcdrkq0ckmtovuxwsjvgl1 *   master01            Ready               Active              Leader              19.03.8
+e9igg0l9tru83ygoys5qcpjv2     node01              Ready               Active                                  19.03.8
+    
+    #Docker Deploy with compose file
+    docker stack deploy --compose-file=docker-compose-swarm.yaml kong
+    
+    #check Services
+    docker service ls
+ID                  NAME                  MODE                REPLICAS            IMAGE                             PORTS
+ahucq8qru2xx        kong_kong             replicated          1/1                 kong:1.4.3                        *:8000-8001->8000-8001/tcp, *:8443->8443/tcp
+bhf0tdd36isg        kong_kong-database    replicated          1/1                 postgres:9.6.11-alpine
+tij6peru7tb8        kong_kong-migration   replicated          0/1                 kong:1.4.3
+n0gaj0l6jyac        kong_konga            replicated          1/1                 pantsel/konga:latest              *:1337->1337/tcp
+83q1eybkhvvy        kong_konga-database   replicated          1/1                 mongo:4.1.5                       *:27017->27017/tcp 
+    
   ```
 
 
