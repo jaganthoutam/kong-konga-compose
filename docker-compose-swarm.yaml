@@ -14,6 +14,18 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    deploy:
+      mode: replicated
+      replicas: 1
+      labels: [APP=kong-database]
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+        max_attempts: 3
+        window: 120s
+      placement:
+        constraints: [node.role == manager]
+
 
   kong-migration:
     image: kong:1.4.3
@@ -27,6 +39,18 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    deploy:
+      mode: replicated
+      replicas: 1
+      labels: [APP=kong-migration]
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+        max_attempts: 3
+        window: 120s
+      placement:
+        constraints: [node.role == manager]
+
 
   kong:
     image: kong:1.4.3
@@ -61,7 +85,17 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-
+    deploy:
+      mode: replicated
+      replicas: 1
+      labels: [APP=konga-database]
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+        max_attempts: 3
+        window: 120s
+      placement:
+        constraints: [node.role == manager]
   konga:
     image: pantsel/konga:latest
     container_name: konga
