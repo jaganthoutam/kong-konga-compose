@@ -123,12 +123,9 @@ The following default users are configured in `konga/user_seed.js`:
 - admin / adminadminadmin
 - demo / demodemodemo
 
-After logging in as admin, create a new connection with URL `http://kong:8001`.
-
 Konga uses MongoDB (4.1) with a persistent Docker volume for its credentials.
 
 
-Thanks to Kong's routing design it's possible to serve Admin API itself behind Kong proxy.
 
   * Add Kong Admin API as services:
   ```bash
