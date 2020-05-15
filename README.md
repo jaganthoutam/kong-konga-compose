@@ -202,6 +202,7 @@ Now we're already have all required component to setup Konga connection
 
 
 Add New Connection with Auth Key
+  
   name: admin-api
   API URL: http://kong:8000/admin-api
   API KEY: 4RB6Y5KPrW5nl0DQqx1da2n9YJdJfl
@@ -211,7 +212,7 @@ Add New Connection with Auth Key
 
 Activate Connection
 
-![Image Activate Connections](https://github.com/jaganthoutam/kong-konga-compose/blob/master/images/screen4.png)
+![Image Activate Connections](https://github.com/jaganthoutam/kong-konga-compose/blob/master/images/screen5.png)
 
 
 
