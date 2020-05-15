@@ -138,5 +138,9 @@ firewall-cmd --zone=public --add-port=6443/tcp --permanent
 firewall-cmd --zone=public --add-port=2379/tcp --permanent
 firewall-cmd --zone=public --add-port=2380/tcp --permanent
 firewall-cmd --zone=public --add-port=10250/tcp --permanent
+firewall-cmd --zone=public --add-port=8000-8001/tcp --permanent
+firewall-cmd --zone=public --add-port=8443-8444/tcp --permanent
+firewall-cmd --zone=public --add-port=1337/tcp --permanent
+firewall-cmd --zone=public --add-port=27017/tcp --permanent
 firewall-cmd --reload
 ```
