@@ -1,0 +1,33 @@
+filebeat.modules:
+- module: system
+  syslog:
+    enabled: true
+
+filebeat.inputs:
+- type: docker
+  enabled: true
+  containers:
+    stream: all # can be all, stdout or stderr
+    ids:
+      - '*'
+filebeat.autodiscover:
+  providers:
+    - type: docker
+      hints.enabled: true
+
+processors:
+- add_cloud_metadata: ~
+- add_docker_metadata: ~
+
+
+setup.ilm.enabled: false
+setup.template.name: "kong-uat"
+setup.template.pattern: "kong-uat-*"
+setup.template.settings:
+  index.number_of_shards: 1
+  index.number_of_replicas: 0
+
+output.elasticsearch:
+   hosts: ['192.168.1.142:9200']
+   index: "kong-uat-%{+yyyy.MM.dd}"
+
