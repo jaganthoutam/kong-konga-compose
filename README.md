@@ -195,10 +195,8 @@ OUTPUT :
 
 ```
 
-
 Setup Connection
 Now we're already have all required component to setup Konga connection
-
 
 
 
