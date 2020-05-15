@@ -191,7 +191,7 @@ curl --location --request POST 'http://localhost:8001/consumers/8866a8a4-722d-4d
 
 OUTPUT : 
 
-{"created_at":1589537982,"consumer":{"id":"8866a8a4-722d-4da5-bf6a-b44c72abbb70"},"id":"b214c70c-4290-44e9-b283-ee5f05437349","tags":null,"ttl":null,"key":"4RB6Y5KPrW5nl0DQqx1da2n9YJdJflWJ"}
+{"created_at":1589537982,"consumer":{"id":"8866a8a4-722d-4da5-bf6a-b44c72abbb70"},"id":"b214c70c-4290-44e9-b283-ee5f05437349","tags":null,"ttl":null,"key":"4RB6Y5KPrW5nl0DQqx1da2n9YJdJfl"}
 
 ```
 
@@ -199,6 +199,21 @@ Setup Connection
 Now we're already have all required component to setup Konga connection
 
 ![Image Konga Connections](https://github.com/jaganthoutam/kong-konga-compose/blob/master/images/screen2.png)
+
+
+Add New Connection with Auth Key
+  name: admin-api
+  API URL: http://kong:8000/admin-api
+  API KEY: 4RB6Y5KPrW5nl0DQqx1da2n9YJdJfl
+
+![Image Konga Connections](https://github.com/jaganthoutam/kong-konga-compose/blob/master/images/screen3.png)
+
+
+Activate Connection
+
+![Image Activate Connections](https://github.com/jaganthoutam/kong-konga-compose/blob/master/images/screen4.png)
+
+
 
 
 
