@@ -124,3 +124,23 @@ The following default users are configured in `konga/user_seed.js`:
 After logging in as admin, create a new connection with URL `http://kong:8001`.
 
 Konga uses MongoDB (4.1) with a persistent Docker volume for its credentials.
+
+
+
+ * Use if you Enables CIS
+```bash
+systemctl restart firewalld
+systemctl enable firewalld
+firewall-cmd --zone=public --add-port=80/tcp
+firewall-cmd --permanent --zone=public --add-port=80/tcp
+firewall-cmd --permanent --zone=public --add-port=443/tcp
+firewall-cmd --zone=public --add-port=6443/tcp --permanent
+firewall-cmd --zone=public --add-port=2379/tcp --permanent
+firewall-cmd --zone=public --add-port=2380/tcp --permanent
+firewall-cmd --zone=public --add-port=10250/tcp --permanent
+firewall-cmd --zone=public --add-port=8000-8001/tcp --permanent
+firewall-cmd --zone=public --add-port=8443-8444/tcp --permanent
+firewall-cmd --zone=public --add-port=1337/tcp --permanent
+firewall-cmd --zone=public --add-port=27017/tcp --permanent
+firewall-cmd --reload
+```
