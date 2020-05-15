@@ -41,7 +41,7 @@ Originally based on [Yuan Cheung's docker-compose-kong](https://github.com/zhang
   - though commented out in `docker-compose.yml` as Konga is enough
 
 
-## Usage
+## Docker-compose Usage
 
  ```bash
     git clone https://github.com/jaganthoutam/kong-konga-compose.git
@@ -49,7 +49,7 @@ Originally based on [Yuan Cheung's docker-compose-kong](https://github.com/zhang
     docker-compose up
   ```
   
-## Swarm setup
+## Kong Cluster Swarm Usage(HA)
 
 
   ```bash
