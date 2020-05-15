@@ -142,5 +142,10 @@ firewall-cmd --zone=public --add-port=8000-8001/tcp --permanent
 firewall-cmd --zone=public --add-port=8443-8444/tcp --permanent
 firewall-cmd --zone=public --add-port=1337/tcp --permanent
 firewall-cmd --zone=public --add-port=27017/tcp --permanent
+firewall-cmd --zone=public --add-masquerade --permanent
+firewall-cmd --permanent --zone=public --change-interface=docker0
+firewall-cmd --permanent --direct --add-rule ipv4 filter INPUT 4 -i docker0 -j ACCEPT
 firewall-cmd --reload
+systemctl restart firewalld
+systemctl restart docker
 ```
