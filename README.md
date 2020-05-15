@@ -42,22 +42,6 @@ Run [Kong API Gateway, Community Edition](https://konghq.com/kong-community-edit
 development setup with [docker-compose](https://docs.docker.com/compose).
 Includes [Konga](https://github.com/pantsel/konga) as admin webapp.
 
-Originally based on [Yuan Cheung's docker-compose-kong](https://github.com/zhangyuan/docker-compose-kong), with the following additions:
-
-- Add [declarative configuration examples](https://github.com/asyrjasalo/kongpose/tree/master/examples)
-  - Includes securing [Kong Admin API](https://docs.konghq.com/0.14.x/secure-admin-api/#kong-api-loopback)
-- Use PostgreSQL 9.6 over 9.5, and Alpine Linux based image for smaller size
-- Prefer `kong-migration` for initializing the database, rather than `setup.sh`
-- Prefer Docker's own health checks, over using `wait-for-it.sh`
-- Remove `bash` from built images, as it is not then needed
-- Tidy up `docker-compose.yml`, removed `links` as they are not mandatory here
-- Remove `start.sh` as `docker-compose restart` is a single command anyway
-- Add MongoDB for storing Konga users
-- Improve healthchecks for checking if database migrations have ran
-- Upgrade Kong to 1.0.0rc3, use Alpine Linux based image for smaller size
-- Upgrade Kong Dashboard to latest, to support Kong >= 0.13
-  - though commented out in `docker-compose.yml` as Konga is enough
-
 
 ## Docker-compose Usage
 
