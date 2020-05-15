@@ -213,5 +213,25 @@ Activate Connection
 
 
 
+##Finally remove 8801 port from docker-compose file
+- Admin API PORT [docker-compose.yaml](https://github.com/jaganthoutam/kong-konga-compose/blob/master/docker-compose.yml#L52) from docker-compose file
+```bash
+....
+....
+....
+    ports:
+      - 8000:8000
+      - 8001:8001
+   #   - 8443:8443
+....
+....
+....
+```
+Update docker-compose 
+```bash
+docker-compose up -d
+```
+
+
 
 
