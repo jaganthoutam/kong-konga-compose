@@ -198,7 +198,7 @@ OUTPUT :
 Setup Connection
 Now we're already have all required component to setup Konga connection
 
-
+![Image Konga Connections](https://github.com/jaganthoutam/kong-konga-compose/blob/master/images/screen2.png)
 
 
 
