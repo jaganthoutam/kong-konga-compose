@@ -1,13 +1,31 @@
 # kongpose
 
+   * Use if you Enables CIS
+```bash
+systemctl restart firewalld
+systemctl enable firewalld
+firewall-cmd --zone=public --add-port=80/tcp
+firewall-cmd --permanent --zone=public --add-port=80/tcp
+firewall-cmd --permanent --zone=public --add-port=443/tcp
+firewall-cmd --zone=public --add-port=6443/tcp --permanent
+firewall-cmd --zone=public --add-port=2379/tcp --permanent
+firewall-cmd --zone=public --add-port=2380/tcp --permanent
+firewall-cmd --zone=public --add-port=10250/tcp --permanent
+firewall-cmd --zone=public --add-port=8000-8001/tcp --permanent
+firewall-cmd --zone=public --add-port=8443-8444/tcp --permanent
+firewall-cmd --zone=public --add-port=1337/tcp --permanent
+firewall-cmd --zone=public --add-port=27017/tcp --permanent
+firewall-cmd --zone=public --add-masquerade --permanent
+firewall-cmd --permanent --zone=public --change-interface=docker0
+firewall-cmd --permanent --direct --add-rule ipv4 filter INPUT 4 -i docker0 -j ACCEPT
+firewall-cmd --reload
+systemctl restart firewalld
+systemctl restart docker
+```
+
+
   * Preparation
   ```bash
-   systemctl stop firewalld
-   systemctl disable firewalld
-   systemctl status firewalld
-   sed -i s/^SELINUX=.*$/SELINUX=permissive/ /etc/selinux/config
-   setenforce 0
-   yum update -y
    yum install -y https://download.docker.com/linux/centos/7/x86_64/stable/Packages/containerd.io-1.2.6-3.3.el7.x86_64.rpm
    sudo curl  https://download.docker.com/linux/centos/docker-ce.repo -o /etc/yum.repos.d/docker-ce.repo
    sudo yum makecache
@@ -126,26 +144,3 @@ After logging in as admin, create a new connection with URL `http://kong:8001`.
 Konga uses MongoDB (4.1) with a persistent Docker volume for its credentials.
 
 
-
- * Use if you Enables CIS
-```bash
-systemctl restart firewalld
-systemctl enable firewalld
-firewall-cmd --zone=public --add-port=80/tcp
-firewall-cmd --permanent --zone=public --add-port=80/tcp
-firewall-cmd --permanent --zone=public --add-port=443/tcp
-firewall-cmd --zone=public --add-port=6443/tcp --permanent
-firewall-cmd --zone=public --add-port=2379/tcp --permanent
-firewall-cmd --zone=public --add-port=2380/tcp --permanent
-firewall-cmd --zone=public --add-port=10250/tcp --permanent
-firewall-cmd --zone=public --add-port=8000-8001/tcp --permanent
-firewall-cmd --zone=public --add-port=8443-8444/tcp --permanent
-firewall-cmd --zone=public --add-port=1337/tcp --permanent
-firewall-cmd --zone=public --add-port=27017/tcp --permanent
-firewall-cmd --zone=public --add-masquerade --permanent
-firewall-cmd --permanent --zone=public --change-interface=docker0
-firewall-cmd --permanent --direct --add-rule ipv4 filter INPUT 4 -i docker0 -j ACCEPT
-firewall-cmd --reload
-systemctl restart firewalld
-systemctl restart docker
-```
