@@ -128,3 +128,79 @@ After logging in as admin, create a new connection with URL `http://kong:8001`.
 Konga uses MongoDB (4.1) with a persistent Docker volume for its credentials.
 
 
+Thanks to Kong's routing design it's possible to serve Admin API itself behind Kong proxy.
+
+  * Add Kong Admin API as services:
+  ```bash
+  curl --location --request POST 'http://localhost:8001/services/' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "name": "admin-api",
+    "host": "localhost",
+    "port": 8001
+}'
+  OUTPUT:
+  {"host":"localhost","created_at":1589537495,"connect_timeout":60000,"id":"ba833b38-f22f-44bc-9173-d4d78d45ca50","protocol":"http","name":"admin-api","read_timeout":60000,"port":8001,"path":null,"updated_at":1589537495,"retries":5,"write_timeout":60000,"tags":null,"client_certificate":null}
+  ```
+
+Add Admin API route: To register route on Admin API Services we need either service name or service id, you can replace the following command below:
+```bash
+curl --location --request POST 'http://localhost:8001/services/admin-api/routes' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "paths": ["/admin-api"]
+}'
+
+OUTPUT:
+
+{"id":"7e65e0b9-3329-4cfb-beb4-20276b0b96ee","tags":null,"updated_at":1589537543,"destinations":null,"headers":null,"protocols":["http","https"],"created_at":1589537543,"snis":null,"service":{"id":"ba833b38-f22f-44bc-9173-d4d78d45ca50"},"name":null,"preserve_host":false,"regex_priority":0,"strip_path":true,"sources":null,"paths":["\/admin-api"],"https_redirect_status_code":426,"hosts":null,"methods":null}
+
+```
+
+Now our Kong Admin API is running behind Kong Proxy, so in order to access it you need to :
+```bash
+curl localhost:8000/admin-api/
+```
+
+Enable Key Auth Plugin
+Our Admin API already run behind kong, but is not secured yet. In order to protect Kong Admin API we need to enable key auth plugin at service level by doing this commands.
+```bash
+curl -X POST http://localhost:8001/services/admin-api/plugins \
+    --data "name=key-auth" 
+
+OUTPUT:
+{"created_at":1589537817,"config":{"key_names":["apikey"],"run_on_preflight":true,"anonymous":null,"hide_credentials":false,"key_in_body":false},"id":"a1ef37a3-9724-4077-b2c9-f28b2b47b70b","service":{"id":"ba833b38-f22f-44bc-9173-d4d78d45ca50"},"name":"key-auth","protocols":["grpc","grpcs","http","https"],"enabled":true,"run_on":"first","consumer":null,"route":null,"tags":null}
+
+```
+
+Add Konga as Consumer
+Our Admin API already run behind kong, but is not secured yet. In order to protect Kong Admin API we need to enable key auth plugin at service level by doing this commands.
+```bash
+curl --location --request POST 'http://localhost:8001/consumers/' \
+--form 'username=konga' \
+--form 'custom_id=cebd360d-3de6-4f8f-81b2-31575fe9846a'
+
+OUTPUT:
+{"custom_id":"cebd360d-3de6-4f8f-81b2-31575fe9846a","created_at":1589537912,"id":"8866a8a4-722d-4da5-bf6a-b44c72abbb70","tags":null,"username":"konga"}
+```
+
+Create API Key for Konga
+Using Consumer ID that generated when we're adding consumer, we will use that Consumer ID and generate API Key.  (Previous Step we got  consumer ID : 8866a8a4-722d-4da5-bf6a-b44c72abbb70)
+```bash
+curl --location --request POST 'http://localhost:8001/consumers/8866a8a4-722d-4da5-bf6a-b44c72abbb70/key-auth'
+
+OUTPUT : 
+
+{"created_at":1589537982,"consumer":{"id":"8866a8a4-722d-4da5-bf6a-b44c72abbb70"},"id":"b214c70c-4290-44e9-b283-ee5f05437349","tags":null,"ttl":null,"key":"4RB6Y5KPrW5nl0DQqx1da2n9YJdJflWJ"}
+
+```
+
+
+Setup Connection
+Now we're already have all required component to setup Konga connection
+
+
+
+
+
+
