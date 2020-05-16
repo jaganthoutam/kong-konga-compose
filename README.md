@@ -1,6 +1,6 @@
 # kongpose
 
-   * Use if you Enables CIS OS Hardening.
+   * Firewalld Rules
 ```bash
 systemctl restart firewalld
 systemctl enable firewalld
