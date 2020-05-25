@@ -21,13 +21,13 @@ processors:
 
 
 setup.ilm.enabled: false
-setup.template.name: "kong-uat"
-setup.template.pattern: "kong-uat-*"
+setup.template.name: "kong-dev"
+setup.template.pattern: "kong-dev-*"
 setup.template.settings:
   index.number_of_shards: 1
   index.number_of_replicas: 0
 
 output.elasticsearch:
    hosts: ['192.168.1.142:9200']
-   index: "kong-uat-%{+yyyy.MM.dd}"
+   index: "kong-dev-%{+yyyy.MM.dd}"
 
