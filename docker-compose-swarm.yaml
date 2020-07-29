@@ -3,18 +3,31 @@ version: '3.3'
 services:
   kong-database:
     image: postgres:9.6.11-alpine
+    pids_limit: 100
+    read_only: true
     container_name: kong-database
     volumes:
       - kong_data:/var/lib/postgresql/data
     environment:
       POSTGRES_USER: kong
       POSTGRES_DB: kong
+    user: kong
+    security_opt:
+      - apparmor:docker-default
+      - no-new-privileges:true         
     healthcheck:
       test: pg_isready -U kong && psql -d kong -U kong -c "SELECT 1=1"
       interval: 10s
       timeout: 5s
       retries: 5
     deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 50M
+        reservations:
+          cpus: '0.50'
+          memory: 20M     
       mode: replicated
       replicas: 1
       labels: [APP=kong-database]
@@ -26,20 +39,32 @@ services:
       placement:
         constraints: [node.role == manager]
 
-
   kong-migration:
     image: kong:2.0.0
+    pids_limit: 100
+    read_only: true
     container_name: kong-migration
     environment:
       KONG_DATABASE: postgres
       KONG_PG_HOST: kong-database
     command: sh -c "(kong migrations up || kong migrations bootstrap) && sleep 30"
+    security_opt:
+      - apparmor:docker-default
+      - no-new-privileges:true           
+    user: kong
     healthcheck:
       test: "ip add"
       interval: 10s
       timeout: 5s
       retries: 5
     deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 50M
+        reservations:
+          cpus: '0.50'
+          memory: 20M     
       mode: replicated
       replicas: 1
       labels: [APP=kong-migration]
@@ -51,9 +76,10 @@ services:
       placement:
         constraints: [node.role == manager]
 
-
   kong:
     image: kong:2.0.0
+    pids_limit: 100
+    read_only: true
     container_name: kong
     environment:
       KONG_DATABASE: postgres
@@ -72,29 +98,57 @@ services:
       KONG_ADMIN_SSL_CERT_KEY: /certs/server.key
       KONG_SSL: "on"
     ports:
-      - 8000:8000
-      - 8443:8443
+      - "192.168.0.0:8000:8000"
+      - "192.168.0.0:8443:8443"
+    user: kong
     volumes:
       - ./cert:/certs
+    security_opt:
+      - apparmor:docker-default
+      - no-new-privileges:true            
     healthcheck:
       test: kong health
       interval: 10s
       timeout: 5s
       retries: 5
-
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 50M
+        reservations:
+          cpus: '0.50'
+          memory: 20M 
+      restart_policy:
+        condition: on-failure
+        max_attempts: 3          
+          
   konga-database:
     image: mongo:4.1.5
+    pids_limit: 100
+    read_only: true
     container_name: konga-database
     volumes:
       - konga_data:/data/db
     ports:
-      - 27017:27017
+      - "192.168.0.0:27017:27017"
+    user: kong
+    security_opt:
+      - apparmor:docker-default
+      - no-new-privileges:true             
     healthcheck:
       test: echo 'db.stats().ok' | mongo localhost:27017/konga --quiet
       interval: 10s
       timeout: 5s
       retries: 5
     deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 50M
+        reservations:
+          cpus: '0.50'
+          memory: 20M 
       mode: replicated
       replicas: 1
       labels: [APP=konga-database]
@@ -105,20 +159,34 @@ services:
         window: 120s
       placement:
         constraints: [node.role == manager]
+        
   konga:
     image: pantsel/konga:latest
+    pids_limit: 100
     container_name: konga
     volumes:
       - ./konga/user_seed.js:/app/user_seed.js:ro
     ports:
-      - 1337:1337
+      - "192.168.0.0:1337:1337"
+    user: kong
     environment:
       DB_ADAPTER: mongo
       DB_DATABASE: konga
       DB_HOST: konga-database
       KONGA_SEED_USER_DATA_SOURCE_FILE: /app/user_seed.js
       NODE_ENV: production
-    restart: on-failure
+    restart: on-failure:5
+    security_opt:
+      - apparmor:docker-default
+      - no-new-privileges:true
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 50M
+        reservations:
+          cpus: '0.50'
+          memory: 20M  
 
 volumes:
   kong_data:

@@ -2,13 +2,20 @@ version: '2.1'
 
 services:
   kong-database:
+    restart: on-failure:5
     image: postgres:9.6.11-alpine
+    user: kong
+    pids_limit: 100
+    read_only: true
     container_name: kong-database
     volumes:
       - kong_data:/var/lib/postgresql/data
     environment:
       POSTGRES_USER: kong
       POSTGRES_DB: kong
+    security_opt:
+      - apparmor:docker-default
+      - no-new-privileges:true      
     healthcheck:
       test: pg_isready -U kong && psql -d kong -U kong -c "SELECT 1=1"
       interval: 10s
@@ -16,7 +23,11 @@ services:
       retries: 5
 
   kong-migration:
+    restart: on-failure:5  
     image: kong:2.0.0
+    user: kong
+    pids_limit: 100
+    read_only: true
     container_name: kong-migration
     depends_on:
       kong-database:
@@ -25,6 +36,9 @@ services:
       KONG_DATABASE: postgres
       KONG_PG_HOST: kong-database
     command: sh -c "(kong migrations up || kong migrations bootstrap) && sleep 30"
+    security_opt:
+      - apparmor:docker-default
+      - no-new-privileges:true           
     healthcheck:
       test: "ip add"
       interval: 10s
@@ -32,7 +46,10 @@ services:
       retries: 5
 
   kong:
+    restart: on-failure:5  
     image: kong:2.0.0
+    pids_limit: 100
+    read_only: true
     container_name: kong
     depends_on:
       kong-database:
@@ -54,11 +71,15 @@ services:
       KONG_ADMIN_SSL_CERT_KEY: /certs/server.key
       KONG_SSL: "on"
     ports:
-      - 8000:8000
-      - 8001:8001       # Remove this after secure ADMIN API
-      - 8443:8443
+      - "192.168.0.0:8000:8000"
+      - "192.168.0.0:8001:8001"       # Remove this after secure ADMIN API
+      - "192.168.0.0:8443:8443"
+    user: kong      
     volumes:
       - ./cert:/certs
+    security_opt:
+      - apparmor:docker-default 
+      - no-new-privileges:true      
     healthcheck:
       test: kong health
       interval: 10s
@@ -66,12 +87,19 @@ services:
       retries: 5
 
   konga-database:
+    restart: on-failure:5  
     image: mongo:4.1.5
+    pids_limit: 100
+    read_only: true    
     container_name: konga-database
     volumes:
       - konga_data:/data/db
     ports:
-      - 27017:27017
+      - "192.168.0.0:27017:27017"
+    user: kong
+    security_opt:
+      - apparmor:docker-default
+      - no-new-privileges:true      
     healthcheck:
       test: echo 'db.stats().ok' | mongo localhost:27017/konga --quiet
       interval: 10s
@@ -81,29 +109,35 @@ services:
   konga:
     build: ./konga
     container_name: konga
+    pids_limit: 100
     depends_on:
       konga-database:
         condition: service_healthy
     volumes:
       - ./konga/user_seed.js:/app/user_seed.js:ro
     ports:
-      - 1337:1337
+      - "192.168.0.0:1337:1337"
+    user: kong
     environment:
       DB_ADAPTER: mongo
       DB_DATABASE: konga
       DB_HOST: konga-database
       KONGA_SEED_USER_DATA_SOURCE_FILE: /app/user_seed.js
       NODE_ENV: production
-    restart: on-failure
-
+    security_opt:
+      - apparmor:docker-default
+      - no-new-privileges:true      
+    restart: on-failure:5
+          
   filebeat:
     image: docker.elastic.co/beats/filebeat:7.6.2
+    pids_limit: 100
     container_name: filebeat
     user: root
     volumes:
         - ${PWD}/filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
         - /var/lib/docker:/var/lib/docker:ro
-        - /var/run/docker.sock:/var/run/docker.sock
+        - /var/run/docker.sock:/var/run/docker.sock:ro
 volumes:
   kong_data:
   konga_data:
