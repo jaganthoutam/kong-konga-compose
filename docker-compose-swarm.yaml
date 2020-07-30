@@ -5,6 +5,7 @@ services:
     image: postgres:9.6.11-alpine
     pids_limit: 100
     read_only: true
+    privileged: false
     container_name: kong-database
     volumes:
       - kong_data:/var/lib/postgresql/data
@@ -12,9 +13,6 @@ services:
       POSTGRES_USER: kong
       POSTGRES_DB: kong
     user: kong
-    security_opt:
-      - apparmor:docker-default
-      - no-new-privileges:true         
     healthcheck:
       test: pg_isready -U kong && psql -d kong -U kong -c "SELECT 1=1"
       interval: 10s
@@ -43,14 +41,12 @@ services:
     image: kong:2.0.0
     pids_limit: 100
     read_only: true
+    privileged: false    
     container_name: kong-migration
     environment:
       KONG_DATABASE: postgres
       KONG_PG_HOST: kong-database
     command: sh -c "(kong migrations up || kong migrations bootstrap) && sleep 30"
-    security_opt:
-      - apparmor:docker-default
-      - no-new-privileges:true           
     user: kong
     healthcheck:
       test: "ip add"
@@ -80,6 +76,7 @@ services:
     image: kong:2.0.0
     pids_limit: 100
     read_only: true
+    privileged: false    
     container_name: kong
     environment:
       KONG_DATABASE: postgres
@@ -103,9 +100,6 @@ services:
     user: kong
     volumes:
       - ./cert:/certs
-    security_opt:
-      - apparmor:docker-default
-      - no-new-privileges:true            
     healthcheck:
       test: kong health
       interval: 10s
@@ -127,15 +121,13 @@ services:
     image: mongo:4.1.5
     pids_limit: 100
     read_only: true
+    privileged: false    
     container_name: konga-database
     volumes:
       - konga_data:/data/db
     ports:
       - "192.168.0.0:27017:27017"
     user: kong
-    security_opt:
-      - apparmor:docker-default
-      - no-new-privileges:true             
     healthcheck:
       test: echo 'db.stats().ok' | mongo localhost:27017/konga --quiet
       interval: 10s
@@ -163,6 +155,7 @@ services:
   konga:
     image: pantsel/konga:latest
     pids_limit: 100
+    privileged: false    
     container_name: konga
     volumes:
       - ./konga/user_seed.js:/app/user_seed.js:ro
@@ -176,9 +169,6 @@ services:
       KONGA_SEED_USER_DATA_SOURCE_FILE: /app/user_seed.js
       NODE_ENV: production
     restart: on-failure:5
-    security_opt:
-      - apparmor:docker-default
-      - no-new-privileges:true
     deploy:
       resources:
         limits:

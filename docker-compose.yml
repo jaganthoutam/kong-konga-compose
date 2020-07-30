@@ -4,9 +4,12 @@ services:
   kong-database:
     restart: on-failure:5
     image: postgres:9.6.11-alpine
+    cpu_shares: 73
+    mem_limit: 1000000000    
     user: kong
     pids_limit: 100
     read_only: true
+    privileged: false
     container_name: kong-database
     volumes:
       - kong_data:/var/lib/postgresql/data
@@ -25,9 +28,12 @@ services:
   kong-migration:
     restart: on-failure:5  
     image: kong:2.0.0
+    cpu_shares: 73
+    mem_limit: 1000000000     
     user: kong
     pids_limit: 100
     read_only: true
+    privileged: false
     container_name: kong-migration
     depends_on:
       kong-database:
@@ -48,8 +54,11 @@ services:
   kong:
     restart: on-failure:5  
     image: kong:2.0.0
+    cpu_shares: 73
+    mem_limit: 1000000000     
     pids_limit: 100
     read_only: true
+    privileged: false
     container_name: kong
     depends_on:
       kong-database:
@@ -89,8 +98,11 @@ services:
   konga-database:
     restart: on-failure:5  
     image: mongo:4.1.5
+    cpu_shares: 73
+    mem_limit: 1000000000     
     pids_limit: 100
-    read_only: true    
+    read_only: true
+    privileged: false    
     container_name: konga-database
     volumes:
       - konga_data:/data/db
@@ -109,7 +121,11 @@ services:
   konga:
     build: ./konga
     container_name: konga
+    cpu_shares: 73
+    mem_limit: 1000000000     
     pids_limit: 100
+    read_only: true
+    privileged: false
     depends_on:
       konga-database:
         condition: service_healthy
@@ -131,7 +147,11 @@ services:
           
   filebeat:
     image: docker.elastic.co/beats/filebeat:7.6.2
+    cpu_shares: 73
+    mem_limit: 1000000000     
     pids_limit: 100
+    read_only: true
+    privileged: false
     container_name: filebeat
     user: root
     volumes:
