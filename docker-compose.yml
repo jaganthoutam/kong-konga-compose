@@ -154,6 +154,15 @@ services:
     privileged: false
     container_name: filebeat
     user: root
+    security_opt:
+      - apparmor:docker-default
+      - no-new-privileges:true      
+    restart: on-failure:5
+    healthcheck:
+      test: filebeat test config
+      interval: 10s
+      timeout: 5s
+      retries: 5    
     volumes:
         - ${PWD}/filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
         - /var/lib/docker:/var/lib/docker:ro
