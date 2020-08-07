@@ -4,8 +4,8 @@ services:
   kong-database:
     restart: on-failure:5
     image: postgres:9.6.11-alpine
-    cpu_shares: 73
-    mem_limit: 1000000000    
+    cpu_shares: 512
+    mem_limit: 1000000    
     user: kong
     pids_limit: 100
     read_only: true
@@ -28,8 +28,8 @@ services:
   kong-migration:
     restart: on-failure:5  
     image: kong:2.0.0
-    cpu_shares: 73
-    mem_limit: 1000000000     
+    cpu_shares: 512
+    mem_limit: 1000000     
     user: kong
     pids_limit: 100
     read_only: true
@@ -54,8 +54,8 @@ services:
   kong:
     restart: on-failure:5  
     image: kong:2.0.0
-    cpu_shares: 73
-    mem_limit: 1000000000     
+    cpu_shares: 512
+    mem_limit: 1000000     
     pids_limit: 100
     read_only: true
     privileged: false
@@ -98,8 +98,8 @@ services:
   konga-database:
     restart: on-failure:5  
     image: mongo:4.1.5
-    cpu_shares: 73
-    mem_limit: 1000000000     
+    cpu_shares: 512
+    mem_limit: 1000000     
     pids_limit: 100
     read_only: true
     privileged: false    
@@ -121,8 +121,8 @@ services:
   konga:
     build: ./konga
     container_name: konga
-    cpu_shares: 73
-    mem_limit: 1000000000     
+    cpu_shares: 512
+    mem_limit: 1000000     
     pids_limit: 100
     read_only: true
     privileged: false
@@ -147,8 +147,8 @@ services:
           
   filebeat:
     image: docker.elastic.co/beats/filebeat:7.6.2
-    cpu_shares: 73
-    mem_limit: 1000000000     
+    cpu_shares: 512
+    mem_limit: 1000000     
     pids_limit: 100
     read_only: true
     privileged: false

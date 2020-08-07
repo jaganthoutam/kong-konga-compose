@@ -22,10 +22,10 @@ services:
       resources:
         limits:
           cpus: '0.50'
-          memory: 50M
+          memory: 2Gi
         reservations:
           cpus: '0.50'
-          memory: 20M     
+          memory: 1Gi     
       mode: replicated
       replicas: 1
       labels: [APP=kong-database]
@@ -57,10 +57,10 @@ services:
       resources:
         limits:
           cpus: '0.50'
-          memory: 50M
+          memory: 2Gi
         reservations:
           cpus: '0.50'
-          memory: 20M     
+          memory: 1Gi      
       mode: replicated
       replicas: 1
       labels: [APP=kong-migration]
@@ -109,10 +109,10 @@ services:
       resources:
         limits:
           cpus: '0.50'
-          memory: 50M
+          memory: 2Gi
         reservations:
           cpus: '0.50'
-          memory: 20M 
+          memory: 1Gi 
       restart_policy:
         condition: on-failure
         max_attempts: 3          
@@ -137,10 +137,10 @@ services:
       resources:
         limits:
           cpus: '0.50'
-          memory: 50M
+          memory: 2Gi
         reservations:
           cpus: '0.50'
-          memory: 20M 
+          memory: 1Gi 
       mode: replicated
       replicas: 1
       labels: [APP=konga-database]
@@ -173,10 +173,10 @@ services:
       resources:
         limits:
           cpus: '0.50'
-          memory: 50M
+          memory: 2Gi
         reservations:
           cpus: '0.50'
-          memory: 20M  
+          memory: 1Gi  
 
 volumes:
   kong_data:
